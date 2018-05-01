@@ -27,4 +27,6 @@ class ProductsService {
       Either.left("Could not save the product")
   }
 
+  fun deleteProducts(): Unit = products.clear()
+
 }

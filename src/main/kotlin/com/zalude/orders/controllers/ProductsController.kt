@@ -15,27 +15,25 @@ import java.util.*
 class ProductsController(private val productsService: ProductsService) {
 
   @GetMapping("/products")
-  suspend fun getProducts(): ResponseEntity<List<Product>> {
-    return ResponseEntity(
-        productsService.getAllProducts(),
-        HttpStatus.OK
-    )
-  }
+  suspend fun getProduct(): ResponseEntity<List<Product>> =
+      ResponseEntity(
+          productsService.getAllProducts(),
+          HttpStatus.OK
+      )
 
   @GetMapping("/products/{id}")
-  suspend fun getProducts(@PathVariable("id") id: UUID): ResponseEntity<Product> {
-    return productsService
-        .getProduct(id)
-        .map { ResponseEntity(it, HttpStatus.OK) }
-        .getOrElse { ResponseEntity(HttpStatus.NOT_FOUND) }
-  }
+  suspend fun getProduct(@PathVariable("id") id: UUID): ResponseEntity<Product> =
+      productsService
+          .getProduct(id)
+          .map { ResponseEntity(it, HttpStatus.OK) }
+          .getOrElse { ResponseEntity(HttpStatus.NOT_FOUND) }
 
   @PostMapping("/products")
   suspend fun createProduct(@RequestBody product: ProductRequest): ResponseEntity<Any> {
-    val result= productsService.saveProduct(Product(UUID.randomUUID(), product.name, product.description))
-    return when(result) {
+    val result = productsService.saveProduct(Product(UUID.randomUUID(), product.name, product.description))
+    return when (result) {
       is Either.Right -> ResponseEntity(result.right().get(), HttpStatus.CREATED)
-      is Either.Left -> ResponseEntity(result.left().get(), HttpStatus.INTERNAL_SERVER_ERROR)
+      is Either.Left -> ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result.left().get())
     }
   }
 
