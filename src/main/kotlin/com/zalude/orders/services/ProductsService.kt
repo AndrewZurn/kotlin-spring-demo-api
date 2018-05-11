@@ -1,5 +1,6 @@
 package com.zalude.orders.services
 
+import com.zalude.orders.controllers.isEmpty
 import com.zalude.orders.models.domain.Product
 import org.funktionale.either.Either
 import org.springframework.stereotype.Component
@@ -22,10 +23,14 @@ class ProductsService {
   suspend fun getProduct(id: UUID): Product? = products.find { it.id == id }
 
   suspend fun saveProduct(product: Product): Either<String, Product> {
-    return if (products.add(product))
-      Either.right(product)
-    else
-      Either.left("Could not save the product")
+    return if (products.find { it.name == product.name }.isEmpty()) {
+      if (products.add(product))
+        Either.right(product)
+      else
+        Either.left("Could not save the product")
+    } else {
+      Either.left("Product with name: '${product.name}' already exists.")
+    }
   }
 
   fun deleteProducts(): Unit = products.clear()

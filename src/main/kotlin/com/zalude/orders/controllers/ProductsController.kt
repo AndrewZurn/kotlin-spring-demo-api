@@ -64,3 +64,6 @@ class ProductsController(private val productsService: ProductsService,
 }
 
 inline fun <T> T?.getOrElse(f: () -> T): T = this ?: f()
+
+fun <T> T?.isDefined(): Boolean = !this.isEmpty()
+fun <T> T?.isEmpty(): Boolean = this == null
