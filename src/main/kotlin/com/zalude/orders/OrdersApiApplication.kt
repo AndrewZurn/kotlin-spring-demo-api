@@ -8,8 +8,6 @@ import org.springframework.scheduling.annotation.EnableScheduling
 
 @SpringBootApplication
 @EnableCoroutine
-@EnableCaching
-@EnableScheduling
 open class OrdersApiApplication
 
 fun main(args: Array<String>) {

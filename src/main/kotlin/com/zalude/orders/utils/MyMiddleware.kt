@@ -9,8 +9,6 @@ import javax.servlet.http.HttpServletResponse
 import javax.servlet.http.HttpServletRequest
 import org.springframework.web.filter.OncePerRequestFilter
 
-
-
 /**
  * @author andrew.zurn@dexcom.com - 5/10/18.
  */
