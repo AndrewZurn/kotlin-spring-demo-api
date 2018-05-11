@@ -1,0 +1,8 @@
+runtime: custom
+env: flex
+resources:
+  cpu: 4
+  memory_gb: 4.5
+service: kotlin-sprint-boot-demo-api
+manual_scaling:
+  instances: 1
