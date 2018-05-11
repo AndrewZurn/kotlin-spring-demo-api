@@ -58,6 +58,7 @@ kotlin {
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib"
 
+    compile('io.github.microutils:kotlin-logging:1.5.4')
     compile('org.funktionale:funktionale-all:1.2')
     compile("org.springframework.boot:spring-boot-starter-web") {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
@@ -65,6 +66,7 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-undertow")
     compile('org.springframework.boot:spring-boot-starter-actuator')
     compile('org.springframework.kotlin:spring-webmvc-kotlin-coroutine:0.3.4')
+    compile('com.fasterxml.jackson.module:jackson-module-kotlin:2.9.5')
     runtime('mysql:mysql-connector-java')
 
     testCompile("org.jetbrains.kotlin:kotlin-reflect")
