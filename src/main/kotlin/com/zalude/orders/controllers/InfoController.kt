@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest
  * @author andrew.zurn@dexcom.com - 5/14/18.
  */
 @RestController
-open class InfoController: AppController {
+class InfoController: AppController {
 
   @GetMapping("/info")
   suspend fun info(request: HttpServletRequest): ResponseEntity<AppInfo> = handleRequest(request) {
