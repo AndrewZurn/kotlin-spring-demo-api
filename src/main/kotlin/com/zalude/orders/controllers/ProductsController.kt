@@ -8,7 +8,6 @@ import com.zalude.orders.models.web.ProductResponseWrapper
 import com.zalude.orders.services.ProductsService
 import com.zalude.orders.validators.ProductRequestValidator
 import mu.KLogging
-import mu.KotlinLogging
 import org.funktionale.either.Either
 import org.springframework.http.HttpStatus.*
 import org.springframework.http.ResponseEntity
@@ -16,6 +15,7 @@ import org.springframework.validation.Errors
 import org.springframework.web.bind.annotation.*
 import java.time.OffsetDateTime
 import java.util.*
+import javax.servlet.http.HttpServletRequest
 
 /**
  * @author awzurn@gmail.com - 4/15/18.
@@ -23,14 +23,14 @@ import java.util.*
 @RestController
 @RequestMapping("/products")
 class ProductsController(private val productsService: ProductsService,
-                         private val productRequestValidator: ProductRequestValidator) {
+                         private val productRequestValidator: ProductRequestValidator): AppController {
 
   @GetMapping
   suspend fun getProduct(): ResponseEntity<ProductResponseWrapper> =
     ResponseEntity(ProductResponseWrapper(productsService.getAllProducts()), OK)
 
   @GetMapping("/{id}")
-  suspend fun getProduct(@PathVariable("id") id: UUID): ResponseEntity<Product> =
+  suspend fun getProduct(@PathVariable("id") id: UUID, request: HttpServletRequest): ResponseEntity<Product> =
     productsService
       .getProduct(id)
       ?.let { ResponseEntity(it, OK) }

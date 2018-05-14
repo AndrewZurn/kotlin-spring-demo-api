@@ -56,9 +56,9 @@ kotlin {
 }
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib"
-
     compile('io.github.microutils:kotlin-logging:1.5.4')
+    compile("org.apache.commons:commons-lang3:3.7")
+    compile("org.jetbrains.kotlin:kotlin-stdlib")
     compile('org.funktionale:funktionale-all:1.2')
     compile("org.springframework.boot:spring-boot-starter-web") {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'

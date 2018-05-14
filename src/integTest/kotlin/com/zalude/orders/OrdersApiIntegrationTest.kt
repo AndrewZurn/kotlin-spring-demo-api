@@ -6,6 +6,8 @@ import com.zalude.orders.models.web.CreateProductRequest
 import com.zalude.orders.models.web.ErrorWrapper
 import com.zalude.orders.models.web.ProductResponseWrapper
 import com.zalude.orders.services.ProductsService
+import com.zalude.orders.utils.TraceIdHeaderKey
+import io.kotlintest.matchers.beGreaterThan
 import io.kotlintest.matchers.containAll
 import io.kotlintest.should
 import io.kotlintest.shouldBe
@@ -26,7 +28,7 @@ import java.util.*
  * @author awzurn@gmail.com - 4/23/18.
  */
 @ContextConfiguration(classes = [(OrdersApiApplication::class)])
-class SpringIntegrationTest : WordSpec() {
+class OrdersApiIntegrationTest : WordSpec() {
 
   override fun listeners() = listOf(SpringListener)
 
@@ -85,6 +87,13 @@ class SpringIntegrationTest : WordSpec() {
         errorWrapper.errors.size shouldBe 2
         errorWrapper.errors.map { it.field } should containAll("name", "description")
         errorWrapper.errors.map { it.message } should containAll("Cannot be blank or null.")
+      }
+
+      "there should be a traceId present on the response" {
+        val response = runBlocking { controller.getProduct() }
+        val traceIdHeader = response.headers[TraceIdHeaderKey]?.get(0)
+        traceIdHeader shouldNotBe null
+        traceIdHeader!!.length shouldBe 16
       }
     }
   }
