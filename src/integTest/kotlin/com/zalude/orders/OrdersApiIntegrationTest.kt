@@ -6,8 +6,6 @@ import com.zalude.orders.models.web.CreateProductRequest
 import com.zalude.orders.models.web.ErrorWrapper
 import com.zalude.orders.models.web.ProductResponseWrapper
 import com.zalude.orders.services.ProductsService
-import com.zalude.orders.utils.TraceIdHeaderKey
-import io.kotlintest.matchers.beGreaterThan
 import io.kotlintest.matchers.containAll
 import io.kotlintest.should
 import io.kotlintest.shouldBe
@@ -18,8 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import kotlinx.coroutines.experimental.*
 import org.springframework.http.ResponseEntity
+import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.validation.BeanPropertyBindingResult
-import org.springframework.validation.Errors
 import java.time.OffsetDateTime
 
 import java.util.*
@@ -41,6 +39,7 @@ class OrdersApiIntegrationTest : WordSpec() {
   init {
     "The Product Controller" should {
 
+      val mockRequest = MockHttpServletRequest()
       val testProducts = listOf(
         Product(UUID.fromString("e644d8a3-30e9-40ed-ae2e-56883afac7ce"), "Pizza", "Great with beer", OffsetDateTime.now()),
         Product(UUID.fromString("6c31228d-32e9-427a-9724-504e2746acbb"), "Beer", "Great with pizza", OffsetDateTime.now())
@@ -57,13 +56,13 @@ class OrdersApiIntegrationTest : WordSpec() {
       }
 
       "get a specific product, returning a 200 response" {
-        val result = runBlocking { controller.getProduct(testProducts.first().id) }
+        val result = runBlocking { controller.getProduct(testProducts.first().id, mockRequest) }
         result.statusCodeValue shouldBe 200
         result.body shouldBe testProducts.first()
       }
 
       "not find a product, returning a 404 response" {
-        val result = runBlocking { controller.getProduct(UUID.fromString("be827ea4-97e6-41e9-958f-23c91e991450")) }
+        val result = runBlocking { controller.getProduct(UUID.fromString("be827ea4-97e6-41e9-958f-23c91e991450"), mockRequest) }
         result.statusCodeValue shouldBe 404
       }
 
@@ -87,13 +86,6 @@ class OrdersApiIntegrationTest : WordSpec() {
         errorWrapper.errors.size shouldBe 2
         errorWrapper.errors.map { it.field } should containAll("name", "description")
         errorWrapper.errors.map { it.message } should containAll("Cannot be blank or null.")
-      }
-
-      "there should be a traceId present on the response" {
-        val response = runBlocking { controller.getProduct() }
-        val traceIdHeader = response.headers[TraceIdHeaderKey]?.get(0)
-        traceIdHeader shouldNotBe null
-        traceIdHeader!!.length shouldBe 16
       }
     }
   }
