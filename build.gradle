@@ -67,6 +67,7 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-actuator')
     compile('org.springframework.kotlin:spring-webmvc-kotlin-coroutine:0.3.4')
     compile('com.fasterxml.jackson.module:jackson-module-kotlin:2.9.5')
+    compile('com.fasterxml.jackson.dataformat:jackson-dataformat-xml')
     runtime('mysql:mysql-connector-java')
 
     testCompile group: 'org.hamcrest', name: 'java-hamcrest', version: '2.0.0.0'
